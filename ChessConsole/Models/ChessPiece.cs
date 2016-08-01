@@ -14,5 +14,47 @@ namespace ChessConsole.Models
 
 		public char Row { get; set; }
 		public byte Column { get; set; }
+
+		public static char GetPieceChar(Pieces p)
+		{
+			char c = '-';
+			switch(p)
+			{
+				case Pieces.KING:
+					c = 'K';
+					break;
+				case Pieces.QUEEN:
+					c = 'Q';
+					break;
+				case Pieces.KNIGHT:
+					c = 'N';
+					break;
+				case Pieces.BISHOP:
+					c = 'B';
+					break;
+				case Pieces.ROOK:
+					c = 'R';
+					break;
+				case Pieces.PAWN:
+					c = 'P';
+					break;
+			}
+			return c;
+		}
+
+		public static char GetColorChar(ChessColors cc)
+		{
+			char c = '-';
+			switch(cc)
+			{
+				case ChessColors.BLACK:
+					c = 'B';
+					break;
+				case ChessColors.WHITE:
+					c = 'W';
+					break;
+			}
+			return c;
+		}
 	}
 }

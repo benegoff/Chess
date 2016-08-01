@@ -88,5 +88,32 @@ namespace ChessConsole.Models
 				}
 			}
 		}
+
+		public void PrintBoard()
+		{
+			for(int i = 1; i <= 8; i++)
+			{
+				for (char c = 'A'; c <= 'H'; c++)
+				{
+					string stringToPrint = "-- ";
+					foreach(ChessPiece cp in WhitePieces)
+					{
+						if(cp.Column == i && cp.Row == c)
+						{
+							stringToPrint = "" + ChessPiece.GetColorChar(cp.Color) + ChessPiece.GetPieceChar(cp.Piece) + " ";
+						}
+					}
+					foreach (ChessPiece cp in BlackPieces)
+					{
+						if (cp.Column == i && cp.Row == c)
+						{
+							stringToPrint = "" + ChessPiece.GetColorChar(cp.Color) + ChessPiece.GetPieceChar(cp.Piece) + " ";
+						}
+					}
+					Console.Write(stringToPrint);
+				}
+				Console.WriteLine();
+			}
+		}
 	}
 }
