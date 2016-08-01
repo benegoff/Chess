@@ -1,0 +1,7 @@
+C:\Users\Ben Goff\Dropbox\Neumont Classes\Q4\Application Development\Projects\Chess\ChessConsole\bin\Debug\ChessConsole.exe.config
+C:\Users\Ben Goff\Dropbox\Neumont Classes\Q4\Introductory Software Projects\Chess\ChessConsole\bin\Debug\ChessConsole.exe.config
+C:\Users\Ben Goff\Dropbox\Neumont Classes\Q4\Introductory Software Projects\Chess\ChessConsole\bin\Debug\ChessConsole.exe
+C:\Users\Ben Goff\Dropbox\Neumont Classes\Q4\Introductory Software Projects\Chess\ChessConsole\bin\Debug\ChessConsole.pdb
+C:\Users\Ben Goff\Dropbox\Neumont Classes\Q4\Introductory Software Projects\Chess\ChessConsole\obj\Debug\ChessConsole.csprojResolveAssemblyReference.cache
+C:\Users\Ben Goff\Dropbox\Neumont Classes\Q4\Introductory Software Projects\Chess\ChessConsole\obj\Debug\ChessConsole.exe
+C:\Users\Ben Goff\Dropbox\Neumont Classes\Q4\Introductory Software Projects\Chess\ChessConsole\obj\Debug\ChessConsole.pdb
