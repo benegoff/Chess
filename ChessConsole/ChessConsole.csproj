@@ -43,8 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandReader.cs" />
     <Compile Include="Enums\ChessColors.cs" />
     <Compile Include="Enums\Pieces.cs" />
+    <Compile Include="Models\Board.cs" />
     <Compile Include="Models\ChessPiece.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
