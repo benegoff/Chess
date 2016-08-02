@@ -9,18 +9,18 @@ namespace ChessConsole.Models
 {
 	public class Board
 	{
-		List<ChessPiece> WhitePieces;
-		List<ChessPiece> BlackPieces;
+		public List<ChessPiece> WhitePieces{ get; set; }
+		public List<ChessPiece> BlackPieces { get; set; }
 		public Board()
 		{
 			WhitePieces = new List<ChessPiece>();
 			BlackPieces = new List<ChessPiece>();
 
-			GeneratePawns(ChessColors.BLACK);
-			GeneratePawns(ChessColors.WHITE);
+			//GeneratePawns(ChessColors.BLACK);
+			//GeneratePawns(ChessColors.WHITE);
 
-			GenerateOtherPieces(ChessColors.WHITE);
-			GenerateOtherPieces(ChessColors.BLACK);
+			//GenerateOtherPieces(ChessColors.WHITE);
+			//GenerateOtherPieces(ChessColors.BLACK);
 		}
 
 		private void GeneratePawns(ChessColors cc)
@@ -29,11 +29,7 @@ namespace ChessConsole.Models
 
 			for (int i = 0; i < 8; i++)
 			{
-				ChessPiece pawn = new ChessPiece();
-				pawn.Piece = Pieces.PAWN;
-				pawn.Color = cc;
-				pawn.Column = column;
-				pawn.Row = (char)(65 + i);
+				ChessPiece pawn = new ChessPiece(Pieces.PAWN, cc, (char)(65 + i), column);
 				if(cc == ChessColors.WHITE)
 				{
 					WhitePieces.Add(pawn);
@@ -51,47 +47,44 @@ namespace ChessConsole.Models
 
 			for (int i = 0; i < 8; i++)
 			{
-				ChessPiece piece = new ChessPiece();
-				piece.Color = cc;
-				piece.Column = column;
-				piece.Row = (char)(65 + i);
+				Pieces piece = Pieces.PAWN;
 
-				switch(piece.Row)
+				switch((char)(65 + i))
 				{
 					case 'A':
 					case 'H':
-						piece.Piece = Pieces.ROOK;
+						piece = Pieces.ROOK;
 						break;
 					case 'B':
 					case 'G':
-						piece.Piece = Pieces.KNIGHT;
+						piece = Pieces.KNIGHT;
 						break;
 					case 'C':
 					case 'F':
-						piece.Piece = Pieces.BISHOP;
+						piece = Pieces.BISHOP;
 						break;
 					case 'D':
-						piece.Piece = Pieces.QUEEN;
+						piece = Pieces.QUEEN;
 						break;
 					case 'E':
-						piece.Piece = Pieces.KING;
+						piece = Pieces.KING;
 						break;
 				}
-
+				ChessPiece cp = new ChessPiece(piece, cc, (char)(65 + i), column);
 				if (cc == ChessColors.WHITE)
 				{
-					WhitePieces.Add(piece);
+					WhitePieces.Add(cp);
 				}
 				else
 				{
-					BlackPieces.Add(piece);
+					BlackPieces.Add(cp);
 				}
 			}
 		}
 
 		public void PrintBoard()
 		{
-			for(int i = 1; i <= 8; i++)
+			for(int i = 8; i >= 1; i--)
 			{
 				for (char c = 'A'; c <= 'H'; c++)
 				{
@@ -103,6 +96,7 @@ namespace ChessConsole.Models
 							stringToPrint = "" + ChessPiece.GetColorChar(cp.Color) + ChessPiece.GetPieceChar(cp.Piece) + " ";
 						}
 					}
+
 					foreach (ChessPiece cp in BlackPieces)
 					{
 						if (cp.Column == i && cp.Row == c)

@@ -11,9 +11,16 @@ namespace ChessConsole.Models
 	{
 		public Pieces Piece { get; set; }
 		public ChessColors Color { get; set; }
-
 		public char Row { get; set; }
 		public byte Column { get; set; }
+
+		public ChessPiece(Pieces p = Pieces.PAWN, ChessColors c = ChessColors.WHITE, char row = 'A', byte col = 1)
+		{
+			Piece = p;
+			Color = c;
+			Row = row;
+			Column = col;
+		}
 
 		public static char GetPieceChar(Pieces p)
 		{

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessConsole.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,11 +15,14 @@ namespace ChessConsole
 
 		public static void Main(string[] args)
 		{
-			if(args.Length > 0)
+			Board b = new Board();
+			if (args.Length > 0)
 			{
-				CommandReader cr = new CommandReader();
+				CommandReader cr = new CommandReader(b);
 				cr.Run(args[0]);
 			}
+
+			b.PrintBoard();
 		}
 
 	}
