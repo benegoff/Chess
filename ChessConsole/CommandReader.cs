@@ -157,7 +157,7 @@ namespace ChessConsole
 				}
 				else
 				{
-					if(cp2.Color == ChessColors.BLACK)
+					if(cp2.Color == ChessColor.BLACK)
 					{
 						ChessBoard.BlackPieces.Remove(cp2);
 					}
@@ -258,45 +258,45 @@ namespace ChessConsole
 		public void PlacePieces(Match matchPlacement)
 		{
 			string piece = "PIECE ERROR";
-			Pieces cp = Pieces.PAWN;
-			ChessColors cc = ChessColors.BLACK;
+			Piece cp = Piece.PAWN;
+			ChessColor cc = ChessColor.BLACK;
 			string color = "COLOR ERROR";
 			string position = "POSITION ERROR";
 			switch (matchPlacement.Groups[1].Value)
 			{
 				case "K":
-					cp = Pieces.KING;
+					cp = Piece.KING;
 					piece = "King";
 					break;
 				case "Q":
-					cp = Pieces.QUEEN;
+					cp = Piece.QUEEN;
 					piece = "Queen";
 					break;
 				case "B":
-					cp = Pieces.BISHOP;
+					cp = Piece.BISHOP;
 					piece = "Bishop";
 					break;
 				case "N":
-					cp = Pieces.KNIGHT;
+					cp = Piece.KNIGHT;
 					piece = "Knight";
 					break;
 				case "R":
-					cp = Pieces.ROOK;
+					cp = Piece.ROOK;
 					piece = "Rook";
 					break;
 				case "P":
-					cp = Pieces.PAWN;
+					cp = Piece.PAWN;
 					piece = "Pawn";
 					break;
 			}
 			switch (matchPlacement.Groups[2].Value)
 			{
 				case "L":
-					cc = ChessColors.WHITE;
+					cc = ChessColor.WHITE;
 					color = "white";
 					break;
 				case "D":
-					cc = ChessColors.BLACK;
+					cc = ChessColor.BLACK;
 					color = "black";
 					break;
 			}
@@ -309,7 +309,7 @@ namespace ChessConsole
 			byte.TryParse(matchPlacement.Groups[4].Value, out pieceColumn);
 
 			ChessPiece chessPiece = new ChessPiece(cp, cc, pieceRow, pieceColumn);
-			if (cc == ChessColors.WHITE)
+			if (cc == ChessColor.WHITE)
 			{
 				ChessBoard.WhitePieces.Add(chessPiece);
 			}

@@ -23,14 +23,14 @@ namespace ChessConsole.Models
 			//GenerateOtherPieces(ChessColors.BLACK);
 		}
 
-		private void GeneratePawns(ChessColors cc)
+		private void GeneratePawns(ChessColor cc)
 		{
-			byte column = cc == ChessColors.WHITE ? (byte)2 : (byte)7;
+			byte column = cc == ChessColor.WHITE ? (byte)2 : (byte)7;
 
 			for (int i = 0; i < 8; i++)
 			{
-				ChessPiece pawn = new ChessPiece(Pieces.PAWN, cc, (char)(65 + i), column);
-				if(cc == ChessColors.WHITE)
+				ChessPiece pawn = new ChessPiece(Piece.PAWN, cc, (char)(65 + i), column);
+				if(cc == ChessColor.WHITE)
 				{
 					WhitePieces.Add(pawn);
 				}
@@ -41,37 +41,37 @@ namespace ChessConsole.Models
 			}
 		}
 
-		private void GenerateOtherPieces(ChessColors cc)
+		private void GenerateOtherPieces(ChessColor cc)
 		{
-			byte column = cc == ChessColors.WHITE ? (byte)1 : (byte)8;
+			byte column = cc == ChessColor.WHITE ? (byte)1 : (byte)8;
 
 			for (int i = 0; i < 8; i++)
 			{
-				Pieces piece = Pieces.PAWN;
+				Piece piece = Piece.PAWN;
 
 				switch((char)(65 + i))
 				{
 					case 'A':
 					case 'H':
-						piece = Pieces.ROOK;
+						piece = Piece.ROOK;
 						break;
 					case 'B':
 					case 'G':
-						piece = Pieces.KNIGHT;
+						piece = Piece.KNIGHT;
 						break;
 					case 'C':
 					case 'F':
-						piece = Pieces.BISHOP;
+						piece = Piece.BISHOP;
 						break;
 					case 'D':
-						piece = Pieces.QUEEN;
+						piece = Piece.QUEEN;
 						break;
 					case 'E':
-						piece = Pieces.KING;
+						piece = Piece.KING;
 						break;
 				}
 				ChessPiece cp = new ChessPiece(piece, cc, (char)(65 + i), column);
-				if (cc == ChessColors.WHITE)
+				if (cc == ChessColor.WHITE)
 				{
 					WhitePieces.Add(cp);
 				}

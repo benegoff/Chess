@@ -9,12 +9,12 @@ namespace ChessConsole.Models
 {
 	public class ChessPiece
 	{
-		public Pieces Piece { get; set; }
-		public ChessColors Color { get; set; }
+		public Piece Piece { get; set; }
+		public ChessColor Color { get; set; }
 		public char Row { get; set; }
 		public byte Column { get; set; }
 
-		public ChessPiece(Pieces p = Pieces.PAWN, ChessColors c = ChessColors.WHITE, char row = 'A', byte col = 1)
+		public ChessPiece(Piece p = Piece.PAWN, ChessColor c = ChessColor.WHITE, char row = 'A', byte col = 1)
 		{
 			Piece = p;
 			Color = c;
@@ -22,42 +22,42 @@ namespace ChessConsole.Models
 			Column = col;
 		}
 
-		public static char GetPieceChar(Pieces p)
+		public static char GetPieceChar(Piece p)
 		{
 			char c = '-';
 			switch(p)
 			{
-				case Pieces.KING:
+				case Piece.KING:
 					c = 'K';
 					break;
-				case Pieces.QUEEN:
+				case Piece.QUEEN:
 					c = 'Q';
 					break;
-				case Pieces.KNIGHT:
+				case Piece.KNIGHT:
 					c = 'N';
 					break;
-				case Pieces.BISHOP:
+				case Piece.BISHOP:
 					c = 'B';
 					break;
-				case Pieces.ROOK:
+				case Piece.ROOK:
 					c = 'R';
 					break;
-				case Pieces.PAWN:
+				case Piece.PAWN:
 					c = 'P';
 					break;
 			}
 			return c;
 		}
 
-		public static char GetColorChar(ChessColors cc)
+		public static char GetColorChar(ChessColor cc)
 		{
 			char c = '-';
 			switch(cc)
 			{
-				case ChessColors.BLACK:
+				case ChessColor.BLACK:
 					c = 'B';
 					break;
-				case ChessColors.WHITE:
+				case ChessColor.WHITE:
 					c = 'W';
 					break;
 			}
