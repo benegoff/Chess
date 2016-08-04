@@ -1,4 +1,5 @@
 ﻿using ChessConsole.Enums;
+using ChessConsole.Models.Pieces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace ChessConsole.Models
 
 			for (int i = 0; i < 8; i++)
 			{
-				ChessPiece pawn = new ChessPiece(Piece.PAWN, cc, (char)(65 + i), column);
+				Pawn pawn = new Pawn(cc, (char)(65 + i), column);
 				if(cc == ChessColor.WHITE)
 				{
 					WhitePieces.Add(pawn);
@@ -47,30 +48,28 @@ namespace ChessConsole.Models
 
 			for (int i = 0; i < 8; i++)
 			{
-				Piece piece = Piece.PAWN;
-
+				ChessPiece cp = new Pawn();
 				switch((char)(65 + i))
 				{
 					case 'A':
 					case 'H':
-						piece = Piece.ROOK;
+						cp = new Rook(cc, (char)(65 + i), column);
 						break;
 					case 'B':
 					case 'G':
-						piece = Piece.KNIGHT;
+						cp = new Knight(cc, (char)(65 + i), column);
 						break;
 					case 'C':
 					case 'F':
-						piece = Piece.BISHOP;
+						cp = new Bishop(cc, (char)(65 + i), column);
 						break;
 					case 'D':
-						piece = Piece.QUEEN;
+						cp = new Queen(cc, (char)(65 + i), column);
 						break;
 					case 'E':
-						piece = Piece.KING;
+						cp = new King(cc, (char)(65 + i), column);
 						break;
 				}
-				ChessPiece cp = new ChessPiece(piece, cc, (char)(65 + i), column);
 				if (cc == ChessColor.WHITE)
 				{
 					WhitePieces.Add(cp);
@@ -84,7 +83,7 @@ namespace ChessConsole.Models
 
 		public void PrintBoard()
 		{
-			Console.WriteLine();
+			Console.WriteLine("-----------------------");
 			for(int i = 8; i >= 1; i--)
 			{
 				for (char c = 'A'; c <= 'H'; c++)
@@ -94,7 +93,7 @@ namespace ChessConsole.Models
 					{
 						if(cp.Column == i && cp.Row == c)
 						{
-							stringToPrint = "" + ChessPiece.GetColorChar(cp.Color) + ChessPiece.GetPieceChar(cp.Piece) + " ";
+							stringToPrint = "" + cp.GetColorChar() + cp.GetPieceChar() + " ";
 						}
 					}
 
@@ -102,14 +101,14 @@ namespace ChessConsole.Models
 					{
 						if (cp.Column == i && cp.Row == c)
 						{
-							stringToPrint = "" + ChessPiece.GetColorChar(cp.Color) + ChessPiece.GetPieceChar(cp.Piece) + " ";
+							stringToPrint = "" + cp.GetColorChar() + cp.GetPieceChar() + " ";
 						}
 					}
 					Console.Write(stringToPrint);
 				}
 				Console.WriteLine();
 			}
-			Console.WriteLine();
+			Console.WriteLine("-----------------------");
 		}
 	}
 }

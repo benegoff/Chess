@@ -44,16 +44,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandReader.cs" />
-    <Compile Include="Enums\ChessColors.cs" />
-    <Compile Include="Enums\Pieces.cs" />
+    <Compile Include="Enums\ChessColor.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\ChessPiece.cs" />
+    <Compile Include="Models\Pieces\Bishop.cs" />
+    <Compile Include="Models\Pieces\King.cs" />
+    <Compile Include="Models\Pieces\Knight.cs" />
+    <Compile Include="Models\Pieces\Pawn.cs" />
+    <Compile Include="Models\Pieces\Queen.cs" />
+    <Compile Include="Models\Pieces\Rook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

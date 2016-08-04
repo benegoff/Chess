@@ -1,5 +1,6 @@
 ﻿using ChessConsole.Enums;
 using ChessConsole.Models;
+using ChessConsole.Models.Pieces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -214,7 +215,7 @@ namespace ChessConsole
 
 		public ChessPiece GetPieceByRowAndColumn(char row, byte col)
 		{
-			ChessPiece cp = new ChessPiece();
+			ChessPiece cp = new Pawn();
 			bool pieceWasFound = false;
 			for (int i = 0; i < ChessBoard.WhitePieces.Count && !pieceWasFound; i++)
 			{
@@ -257,47 +258,17 @@ namespace ChessConsole
 
 		public void PlacePieces(Match matchPlacement)
 		{
+			ChessPiece chessPiece = new Pawn();
 			string piece = "PIECE ERROR";
-			Piece cp = Piece.PAWN;
 			ChessColor cc = ChessColor.BLACK;
-			string color = "COLOR ERROR";
 			string position = "POSITION ERROR";
-			switch (matchPlacement.Groups[1].Value)
-			{
-				case "K":
-					cp = Piece.KING;
-					piece = "King";
-					break;
-				case "Q":
-					cp = Piece.QUEEN;
-					piece = "Queen";
-					break;
-				case "B":
-					cp = Piece.BISHOP;
-					piece = "Bishop";
-					break;
-				case "N":
-					cp = Piece.KNIGHT;
-					piece = "Knight";
-					break;
-				case "R":
-					cp = Piece.ROOK;
-					piece = "Rook";
-					break;
-				case "P":
-					cp = Piece.PAWN;
-					piece = "Pawn";
-					break;
-			}
 			switch (matchPlacement.Groups[2].Value)
 			{
 				case "L":
 					cc = ChessColor.WHITE;
-					color = "white";
 					break;
 				case "D":
 					cc = ChessColor.BLACK;
-					color = "black";
 					break;
 			}
 			position = matchPlacement.Groups[3].Value;
@@ -308,7 +279,33 @@ namespace ChessConsole
 			byte pieceColumn = 0;
 			byte.TryParse(matchPlacement.Groups[4].Value, out pieceColumn);
 
-			ChessPiece chessPiece = new ChessPiece(cp, cc, pieceRow, pieceColumn);
+			switch (matchPlacement.Groups[1].Value)
+			{
+				case "K":
+					chessPiece = new King(cc, pieceRow, pieceColumn);
+					piece = "King";
+					break;
+				case "Q":
+					chessPiece = new Queen(cc, pieceRow, pieceColumn);
+					piece = "Queen";
+					break;
+				case "B":
+					chessPiece = new Bishop(cc, pieceRow, pieceColumn);
+					piece = "Bishop";
+					break;
+				case "N":
+					chessPiece = new Knight(cc, pieceRow, pieceColumn);
+					piece = "Knight";
+					break;
+				case "R":
+					chessPiece = new Rook(cc, pieceRow, pieceColumn);
+					piece = "Rook";
+					break;
+				case "P":
+					chessPiece = new Pawn(cc, pieceRow, pieceColumn);
+					piece = "Pawn";
+					break;
+			}
 			if (cc == ChessColor.WHITE)
 			{
 				ChessBoard.WhitePieces.Add(chessPiece);
@@ -318,7 +315,7 @@ namespace ChessConsole
 				ChessBoard.BlackPieces.Add(chessPiece);
 			}
 
-			Console.WriteLine("Place the " + color + " " + piece + " on " + position + ".");
+			Console.WriteLine("Place the " + cc + " " + piece + " on " + position + ".");
 		}
 
 	}
