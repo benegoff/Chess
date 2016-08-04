@@ -84,6 +84,7 @@ namespace ChessConsole.Models
 
 		public void PrintBoard()
 		{
+			Console.WriteLine();
 			for(int i = 8; i >= 1; i--)
 			{
 				for (char c = 'A'; c <= 'H'; c++)
@@ -108,6 +109,7 @@ namespace ChessConsole.Models
 				}
 				Console.WriteLine();
 			}
+			Console.WriteLine();
 		}
 	}
 }

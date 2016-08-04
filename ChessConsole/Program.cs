@@ -22,7 +22,6 @@ namespace ChessConsole
 				cr.Run(args[0]);
 			}
 
-			b.PrintBoard();
 		}
 
 	}

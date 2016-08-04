@@ -63,29 +63,116 @@ namespace ChessConsole
 
 		public void MoveTwoPieces(Match matchTwoMovement)
 		{
-			string piece1Position1 = matchTwoMovement.Groups[1].Value;
-			piece1Position1 += matchTwoMovement.Groups[2].Value;
+			char piece1Row1 = matchTwoMovement.Groups[1].Value[0];
+			byte piece1Col1 = 0;
+			byte.TryParse(matchTwoMovement.Groups[2].Value, out piece1Col1);
+			string piece1Position1 = piece1Row1.ToString() + piece1Col1;
 
-			string piece1Position2 = matchTwoMovement.Groups[3].Value;
-			piece1Position2 += matchTwoMovement.Groups[4].Value;
+			char piece1Row2 = matchTwoMovement.Groups[3].Value[0];
+			byte piece1Col2 = 0;
+			byte.TryParse(matchTwoMovement.Groups[4].Value, out piece1Col2);
+			string piece1Position2 = piece1Row2.ToString() + piece1Col2;
 
-			string piece2Position1 = matchTwoMovement.Groups[5].Value;
-			piece2Position1 += matchTwoMovement.Groups[6].Value;
+			char piece2Row1 = matchTwoMovement.Groups[5].Value[0];
+			byte piece2Col1 = 0;
+			byte.TryParse(matchTwoMovement.Groups[6].Value, out piece2Col1);
+			string piece2Position1 = piece2Row1.ToString() + piece2Col1;
 
-			string piece2Position2 = matchTwoMovement.Groups[7].Value;
-			piece2Position2 += matchTwoMovement.Groups[8].Value;
+			char piece2Row2 = matchTwoMovement.Groups[7].Value[0];
+			byte piece2Col2 = 0;
+			byte.TryParse(matchTwoMovement.Groups[8].Value, out piece2Col2);
+			string piece2Position2 = piece2Row2.ToString() + piece2Col2;
 
-			Console.WriteLine("The piece at " + piece1Position1 + " was moved to " + piece1Position2 + " and the piece at " + piece2Position1 + " was moved to " + piece2Position2 + ".");
+			bool firstPieceWasFound = CheckSpaceForPiece(piece1Row1, piece1Col1);
+			bool secondPieceWasFound = CheckSpaceForPiece(piece1Row2, piece1Col2);
+			bool thirdPieceWasFound = CheckSpaceForPiece(piece2Row1, piece2Col1);
+			bool fourthPieceWasFound = CheckSpaceForPiece(piece2Row2, piece2Col2);
+
+			if (firstPieceWasFound && !secondPieceWasFound)
+			{
+				if (thirdPieceWasFound && !fourthPieceWasFound)
+				{
+					ChessPiece cp1 = GetPieceByRowAndColumn(piece1Row1, piece1Col1);
+					ChessPiece cp2 = GetPieceByRowAndColumn(piece2Row1, piece2Col1);
+
+					cp1.Row = piece1Row2;
+					cp1.Column = piece1Col2;
+					cp2.Row = piece2Row2;
+					cp2.Column = piece2Col2;
+					Console.WriteLine("The piece at " + piece1Position1 + " was moved to " + piece1Position2 + " and the piece at " + piece2Position1 + " was moved to " + piece2Position2 + ".");
+					ChessBoard.PrintBoard();
+				}
+				else if (!thirdPieceWasFound)
+				{
+					Console.WriteLine("There isn't a piece at " + piece2Position1 + ".");
+				}
+				else if (fourthPieceWasFound)
+				{
+					Console.WriteLine("There isn't space to castle.");
+				}
+			}
+			else if (!firstPieceWasFound)
+			{
+				Console.WriteLine("There isn't a piece at " + piece1Position1 + ".");
+			}
+			else if (secondPieceWasFound)
+			{
+				Console.WriteLine("There isn't space to castle.");
+			}
 		}
 
 		public void CapturePiece(Match matchCapture)
 		{
-			string position1 = matchCapture.Groups[1].Value;
-			position1 += matchCapture.Groups[2].Value;
+			char row1 = matchCapture.Groups[1].Value[0];
+			byte col1 = 0;
+			byte.TryParse(matchCapture.Groups[2].Value, out col1);
+			string position1 = row1.ToString();
+			position1 += col1;
 
-			string position2 = matchCapture.Groups[3].Value;
-			position2 += matchCapture.Groups[4].Value;
-			Console.WriteLine("The piece at " + position1 + " moved to and captured the piece at " + position2 + ".");
+			char row2 = matchCapture.Groups[3].Value[0];
+			byte col2 = 0;
+			byte.TryParse(matchCapture.Groups[4].Value, out col2);
+
+			string position2 = row2.ToString();
+			position2 += col2;
+
+			bool firstPieceWasFound = CheckSpaceForPiece(row1, col1);
+			bool secondPieceWasFound = CheckSpaceForPiece(row2, col2);
+
+			if (firstPieceWasFound && !secondPieceWasFound)
+			{
+				Console.WriteLine("There is not a piece to capture at " + position2 + ".");
+			}
+			else if (!firstPieceWasFound)
+			{
+				Console.WriteLine("There isn't a piece at " + position1 + ".");
+			}
+			else if (firstPieceWasFound && secondPieceWasFound)
+			{
+				ChessPiece cp1 = GetPieceByRowAndColumn(row1, col1);
+				ChessPiece cp2 = GetPieceByRowAndColumn(row2, col2);
+				if(cp1.Color == cp2.Color)
+				{
+					Console.WriteLine("You cannot capture a piece of your own color.");
+				}
+				else
+				{
+					if(cp2.Color == ChessColors.BLACK)
+					{
+						ChessBoard.BlackPieces.Remove(cp2);
+					}
+					else
+					{
+						ChessBoard.WhitePieces.Remove(cp2);
+					}
+					cp1.Row = row2;
+					cp1.Column = col2;
+					Console.WriteLine("The piece at " + position1 + " moved to and captured the piece at " + position2 + ".");
+					ChessBoard.PrintBoard();
+				}
+				
+			}
+
 		}
 
 		public void MovePieces(Match matchMovement)
@@ -103,7 +190,69 @@ namespace ChessConsole
 			string position2 = row2.ToString();
 			position2 += col2;
 
-			Console.WriteLine("The piece at " + position1 + " was moved to " + position2 + ".");
+			bool firstPieceWasFound = CheckSpaceForPiece(row1, col1);
+			bool secondPieceWasFound = CheckSpaceForPiece(row2, col2);
+
+			if (firstPieceWasFound && !secondPieceWasFound)
+			{
+				ChessPiece cp = GetPieceByRowAndColumn(row1, col1);
+				cp.Row = row2;
+				cp.Column = col2;
+				Console.WriteLine("The piece at " + position1 + " was moved to " + position2 + ".");
+				ChessBoard.PrintBoard();
+			}
+			else if(!firstPieceWasFound)
+			{
+				Console.WriteLine("There isn't a piece at " + position1 + ".");
+			}
+			else if(secondPieceWasFound)
+			{
+				Console.WriteLine("There is a piece at " + position2 + ".");
+			}
+
+		}
+
+		public ChessPiece GetPieceByRowAndColumn(char row, byte col)
+		{
+			ChessPiece cp = new ChessPiece();
+			bool pieceWasFound = false;
+			for (int i = 0; i < ChessBoard.WhitePieces.Count && !pieceWasFound; i++)
+			{
+				if (ChessBoard.WhitePieces[i].Row == row && ChessBoard.WhitePieces[i].Column == col)
+				{
+					cp = ChessBoard.WhitePieces[i];
+					pieceWasFound = true;
+				}
+			}
+			for (int i = 0; i < ChessBoard.BlackPieces.Count && !pieceWasFound; i++)
+			{
+				if (ChessBoard.BlackPieces[i].Row == row && ChessBoard.BlackPieces[i].Column == col)
+				{
+					cp = ChessBoard.BlackPieces[i];
+					pieceWasFound = true;
+				}
+			}
+			return cp;
+		}
+
+		public bool CheckSpaceForPiece(char row, byte col)
+		{
+			bool pieceWasFound = false;
+			for (int i = 0; i < ChessBoard.WhitePieces.Count && !pieceWasFound; i++)
+			{
+				if (ChessBoard.WhitePieces[i].Row == row && ChessBoard.WhitePieces[i].Column == col)
+				{
+					pieceWasFound = true;
+				}
+			}
+			for (int i = 0; i < ChessBoard.BlackPieces.Count && !pieceWasFound; i++)
+			{
+				if (ChessBoard.BlackPieces[i].Row == row && ChessBoard.BlackPieces[i].Column == col)
+				{
+					pieceWasFound = true;
+				}
+			}
+			return pieceWasFound;
 		}
 
 		public void PlacePieces(Match matchPlacement)
@@ -157,7 +306,6 @@ namespace ChessConsole
 
 			char pieceRow = position[0];
 			byte pieceColumn = 0;
-
 			byte.TryParse(matchPlacement.Groups[4].Value, out pieceColumn);
 
 			ChessPiece chessPiece = new ChessPiece(cp, cc, pieceRow, pieceColumn);
