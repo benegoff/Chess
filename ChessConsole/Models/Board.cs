@@ -17,11 +17,11 @@ namespace ChessConsole.Models
 			WhitePieces = new List<ChessPiece>();
 			BlackPieces = new List<ChessPiece>();
 
-			//GeneratePawns(ChessColors.BLACK);
-			//GeneratePawns(ChessColors.WHITE);
+			GeneratePawns(ChessColor.BLACK);
+			GeneratePawns(ChessColor.WHITE);
 
-			//GenerateOtherPieces(ChessColors.WHITE);
-			//GenerateOtherPieces(ChessColors.BLACK);
+			GenerateOtherPieces(ChessColor.WHITE);
+			GenerateOtherPieces(ChessColor.BLACK);
 		}
 
 		private void GeneratePawns(ChessColor cc)
@@ -79,6 +79,29 @@ namespace ChessConsole.Models
 					BlackPieces.Add(cp);
 				}
 			}
+		}
+
+		public ChessPiece GetPieceByRowAndColumn(char row, byte col)
+		{
+			ChessPiece cp = null;
+			bool pieceWasFound = false;
+			for (int i = 0; i < WhitePieces.Count && !pieceWasFound; i++)
+			{
+				if (WhitePieces[i].Row == row && WhitePieces[i].Column == col)
+				{
+					cp = WhitePieces[i];
+					pieceWasFound = true;
+				}
+			}
+			for (int i = 0; i < BlackPieces.Count && !pieceWasFound; i++)
+			{
+				if (BlackPieces[i].Row == row && BlackPieces[i].Column == col)
+				{
+					cp = BlackPieces[i];
+					pieceWasFound = true;
+				}
+			}
+			return cp;
 		}
 
 		public void PrintBoard()

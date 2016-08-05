@@ -22,6 +22,8 @@ namespace ChessConsole.Models
 
 		public abstract char GetPieceChar();
 
+		public abstract bool CheckMoveValidity(char row1, byte col1, char row2, byte col2, Board b, bool isCapturing);
+
 		public char GetColorChar()
 		{
 			char c = '-';

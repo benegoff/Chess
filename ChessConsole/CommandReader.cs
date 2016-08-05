@@ -93,8 +93,8 @@ namespace ChessConsole
 			{
 				if (thirdPieceWasFound && !fourthPieceWasFound)
 				{
-					ChessPiece cp1 = GetPieceByRowAndColumn(piece1Row1, piece1Col1);
-					ChessPiece cp2 = GetPieceByRowAndColumn(piece2Row1, piece2Col1);
+					ChessPiece cp1 = ChessBoard.GetPieceByRowAndColumn(piece1Row1, piece1Col1);
+					ChessPiece cp2 = ChessBoard.GetPieceByRowAndColumn(piece2Row1, piece2Col1);
 
 					cp1.Row = piece1Row2;
 					cp1.Column = piece1Col2;
@@ -150,26 +150,34 @@ namespace ChessConsole
 			}
 			else if (firstPieceWasFound && secondPieceWasFound)
 			{
-				ChessPiece cp1 = GetPieceByRowAndColumn(row1, col1);
-				ChessPiece cp2 = GetPieceByRowAndColumn(row2, col2);
+				ChessPiece cp1 = ChessBoard.GetPieceByRowAndColumn(row1, col1);
+				ChessPiece cp2 = ChessBoard.GetPieceByRowAndColumn(row2, col2);
 				if(cp1.Color == cp2.Color)
 				{
 					Console.WriteLine("You cannot capture a piece of your own color.");
 				}
 				else
 				{
-					if(cp2.Color == ChessColor.BLACK)
+					if(cp1.CheckMoveValidity(row1, col1, row2, col2, ChessBoard, true))
 					{
-						ChessBoard.BlackPieces.Remove(cp2);
+						if (cp2.Color == ChessColor.BLACK)
+						{
+							ChessBoard.BlackPieces.Remove(cp2);
+						}
+						else
+						{
+							ChessBoard.WhitePieces.Remove(cp2);
+						}
+						cp1.Row = row2;
+						cp1.Column = col2;
+						Console.WriteLine("The piece at " + position1 + " moved to and captured the piece at " + position2 + ".");
+						ChessBoard.PrintBoard();
 					}
 					else
 					{
-						ChessBoard.WhitePieces.Remove(cp2);
+						Console.WriteLine("That move is not valid.");
 					}
-					cp1.Row = row2;
-					cp1.Column = col2;
-					Console.WriteLine("The piece at " + position1 + " moved to and captured the piece at " + position2 + ".");
-					ChessBoard.PrintBoard();
+					
 				}
 				
 			}
@@ -196,11 +204,21 @@ namespace ChessConsole
 
 			if (firstPieceWasFound && !secondPieceWasFound)
 			{
-				ChessPiece cp = GetPieceByRowAndColumn(row1, col1);
-				cp.Row = row2;
-				cp.Column = col2;
-				Console.WriteLine("The piece at " + position1 + " was moved to " + position2 + ".");
-				ChessBoard.PrintBoard();
+				ChessPiece cp = ChessBoard.GetPieceByRowAndColumn(row1, col1);
+				if(cp.CheckMoveValidity(row1, col1, row2, col2, ChessBoard, false))
+				{
+					cp.Row = row2;
+					cp.Column = col2;
+
+					Console.WriteLine("The piece at " + position1 + " was moved to " + position2 + ".");
+					ChessBoard.PrintBoard();
+				}
+				else
+				{
+					Console.WriteLine("That move is not valid.");
+				}
+				
+				
 			}
 			else if(!firstPieceWasFound)
 			{
@@ -213,28 +231,7 @@ namespace ChessConsole
 
 		}
 
-		public ChessPiece GetPieceByRowAndColumn(char row, byte col)
-		{
-			ChessPiece cp = new Pawn();
-			bool pieceWasFound = false;
-			for (int i = 0; i < ChessBoard.WhitePieces.Count && !pieceWasFound; i++)
-			{
-				if (ChessBoard.WhitePieces[i].Row == row && ChessBoard.WhitePieces[i].Column == col)
-				{
-					cp = ChessBoard.WhitePieces[i];
-					pieceWasFound = true;
-				}
-			}
-			for (int i = 0; i < ChessBoard.BlackPieces.Count && !pieceWasFound; i++)
-			{
-				if (ChessBoard.BlackPieces[i].Row == row && ChessBoard.BlackPieces[i].Column == col)
-				{
-					cp = ChessBoard.BlackPieces[i];
-					pieceWasFound = true;
-				}
-			}
-			return cp;
-		}
+		
 
 		public bool CheckSpaceForPiece(char row, byte col)
 		{
@@ -315,7 +312,7 @@ namespace ChessConsole
 				ChessBoard.BlackPieces.Add(chessPiece);
 			}
 
-			Console.WriteLine("Place the " + cc + " " + piece + " on " + position + ".");
+			Console.WriteLine("Placed the " + cc + " " + piece + " on " + position + ".");
 		}
 
 	}

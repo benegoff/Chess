@@ -15,5 +15,10 @@ namespace ChessConsole.Models.Pieces
 		{
 			return 'P';
 		}
+
+		public override bool CheckMoveValidity(char row1, byte col1, char row2, byte col2, Board b, bool isCapturing)
+		{
+			return true;
+		}
 	}
 }
