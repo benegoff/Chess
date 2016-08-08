@@ -17,8 +17,8 @@ namespace ChessConsole.Models
 			WhitePieces = new List<ChessPiece>();
 			BlackPieces = new List<ChessPiece>();
 
-			GeneratePawns(ChessColor.BLACK);
-			GeneratePawns(ChessColor.WHITE);
+			//GeneratePawns(ChessColor.BLACK);
+			//GeneratePawns(ChessColor.WHITE);
 
 			GenerateOtherPieces(ChessColor.WHITE);
 			GenerateOtherPieces(ChessColor.BLACK);
