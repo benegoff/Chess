@@ -10,10 +10,10 @@ namespace ChessConsole.Models
 	public abstract class ChessPiece
 	{
 		public ChessColor Color { get; set; }
-		public char Row { get; set; }
-		public byte Column { get; set; }
+		public byte Row { get; set; }
+		public char Column { get; set; }
 
-		public ChessPiece(ChessColor c = ChessColor.WHITE, char row = 'A', byte col = 1)
+		public ChessPiece(ChessColor c = ChessColor.WHITE, byte row = 1, char col = 'A')
 		{
 			Color = c;
 			Row = row;
@@ -22,7 +22,7 @@ namespace ChessConsole.Models
 
 		public abstract char GetPieceChar();
 
-		public abstract bool CheckMoveValidity(char row1, byte col1, char row2, byte col2, Board b, bool isCapturing);
+		public abstract bool CheckMoveValidity(byte row1, char col1, byte row2, char col2, Board b, bool isCapturing);
 
 		public char GetColorChar()
 		{

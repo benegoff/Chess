@@ -9,14 +9,14 @@ namespace ChessConsole.Models.Pieces
 {
 	public class Pawn : ChessPiece
 	{
-		public Pawn(ChessColor c = ChessColor.WHITE, char row = 'A', byte col = 1) : base(c, row, col) { }
+		public Pawn(ChessColor c = ChessColor.WHITE, byte row = 1, char col = 'A') : base(c, row, col) { }
 
 		public override char GetPieceChar()
 		{
 			return 'P';
 		}
 
-		public override bool CheckMoveValidity(char row1, byte col1, char row2, byte col2, Board b, bool isCapturing)
+		public override bool CheckMoveValidity(byte row1, char col1, byte row2, char col2, Board b, bool isCapturing)
 		{
 			return true;
 		}

@@ -26,11 +26,11 @@ namespace ChessConsole.Models
 
 		private void GeneratePawns(ChessColor cc)
 		{
-			byte column = cc == ChessColor.WHITE ? (byte)2 : (byte)7;
+			byte row = cc == ChessColor.WHITE ? (byte)2 : (byte)7;
 
 			for (int i = 0; i < 8; i++)
 			{
-				Pawn pawn = new Pawn(cc, (char)(65 + i), column);
+				Pawn pawn = new Pawn(cc, row, (char)(65 + i));
 				if(cc == ChessColor.WHITE)
 				{
 					WhitePieces.Add(pawn);
@@ -44,7 +44,7 @@ namespace ChessConsole.Models
 
 		private void GenerateOtherPieces(ChessColor cc)
 		{
-			byte column = cc == ChessColor.WHITE ? (byte)1 : (byte)8;
+			byte row = cc == ChessColor.WHITE ? (byte)1 : (byte)8;
 
 			for (int i = 0; i < 8; i++)
 			{
@@ -53,21 +53,21 @@ namespace ChessConsole.Models
 				{
 					case 'A':
 					case 'H':
-						cp = new Rook(cc, (char)(65 + i), column);
+						cp = new Rook(cc, row, (char)(65 + i));
 						break;
 					case 'B':
 					case 'G':
-						cp = new Knight(cc, (char)(65 + i), column);
+						cp = new Knight(cc, row, (char)(65 + i));
 						break;
 					case 'C':
 					case 'F':
-						cp = new Bishop(cc, (char)(65 + i), column);
+						cp = new Bishop(cc, row, (char)(65 + i));
 						break;
 					case 'D':
-						cp = new Queen(cc, (char)(65 + i), column);
+						cp = new Queen(cc, row, (char)(65 + i));
 						break;
 					case 'E':
-						cp = new King(cc, (char)(65 + i), column);
+						cp = new King(cc, row, (char)(65 + i));
 						break;
 				}
 				if (cc == ChessColor.WHITE)
@@ -81,7 +81,7 @@ namespace ChessConsole.Models
 			}
 		}
 
-		public ChessPiece GetPieceByRowAndColumn(char row, byte col)
+		public ChessPiece GetPieceByRowAndColumn(byte row, char col)
 		{
 			ChessPiece cp = null;
 			bool pieceWasFound = false;
@@ -114,7 +114,7 @@ namespace ChessConsole.Models
 					string stringToPrint = "-- ";
 					foreach(ChessPiece cp in WhitePieces)
 					{
-						if(cp.Column == i && cp.Row == c)
+						if(cp.Row == i && cp.Column == c)
 						{
 							stringToPrint = "" + cp.GetColorChar() + cp.GetPieceChar() + " ";
 						}
@@ -122,7 +122,7 @@ namespace ChessConsole.Models
 
 					foreach (ChessPiece cp in BlackPieces)
 					{
-						if (cp.Column == i && cp.Row == c)
+						if (cp.Row == i && cp.Column == c)
 						{
 							stringToPrint = "" + cp.GetColorChar() + cp.GetPieceChar() + " ";
 						}
