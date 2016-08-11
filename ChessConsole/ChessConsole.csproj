@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandReader.cs" />
+    <Compile Include="Control.cs" />
     <Compile Include="Enums\ChessColor.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\ChessPiece.cs" />

@@ -12,6 +12,7 @@ namespace ChessConsole.Models
 		public ChessColor Color { get; set; }
 		public byte Row { get; set; }
 		public char Column { get; set; }
+		public bool HasMoved { get; set; }
 
 		public ChessPiece(ChessColor c = ChessColor.WHITE, byte row = 1, char col = 'A')
 		{
@@ -20,10 +21,16 @@ namespace ChessConsole.Models
 			Column = col;
 		}
 
+		/// <summary>
+		/// Returns the char the piece represents.
+		/// </summary>
+		/// <returns>'K' if the piece is a King, 'Q' for Queen, 'R' for Rook, 'N' for Knight, 'B' for Bishop, or 'P' for Pawn.</returns>
 		public abstract char GetPieceChar();
 
-		public abstract bool CheckMoveValidity(byte row1, char col1, byte row2, char col2, Board b, bool isCapturing);
-
+		/// <summary>
+		/// Returns a char representing the color of the piece.
+		/// </summary>
+		/// <returns>'W' if the piece is white, 'B' if the piece is black.</returns>
 		public char GetColorChar()
 		{
 			char c = '-';

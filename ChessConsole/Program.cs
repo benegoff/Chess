@@ -13,14 +13,12 @@ namespace ChessConsole
 
 		public static void Main(string[] args)
 		{
-			Board b = new Board();
+			Control c = new Control();
 			if (args.Length > 0)
 			{
-				CommandReader cr = new CommandReader(b);
+				CommandReader cr = new CommandReader(c);
 				cr.Run(args[0]);
 			}
-
 		}
-
 	}
 }

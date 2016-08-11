@@ -16,71 +16,14 @@ namespace ChessConsole.Models
 		{
 			WhitePieces = new List<ChessPiece>();
 			BlackPieces = new List<ChessPiece>();
-
-			//GeneratePawns(ChessColor.BLACK);
-			//GeneratePawns(ChessColor.WHITE);
-
-			GenerateOtherPieces(ChessColor.WHITE);
-			GenerateOtherPieces(ChessColor.BLACK);
 		}
 
-		private void GeneratePawns(ChessColor cc)
-		{
-			byte row = cc == ChessColor.WHITE ? (byte)2 : (byte)7;
-
-			for (int i = 0; i < 8; i++)
-			{
-				Pawn pawn = new Pawn(cc, row, (char)(65 + i));
-				if(cc == ChessColor.WHITE)
-				{
-					WhitePieces.Add(pawn);
-				}
-				else
-				{
-					BlackPieces.Add(pawn);
-				}
-			}
-		}
-
-		private void GenerateOtherPieces(ChessColor cc)
-		{
-			byte row = cc == ChessColor.WHITE ? (byte)1 : (byte)8;
-
-			for (int i = 0; i < 8; i++)
-			{
-				ChessPiece cp = new Pawn();
-				switch((char)(65 + i))
-				{
-					case 'A':
-					case 'H':
-						cp = new Rook(cc, row, (char)(65 + i));
-						break;
-					case 'B':
-					case 'G':
-						cp = new Knight(cc, row, (char)(65 + i));
-						break;
-					case 'C':
-					case 'F':
-						cp = new Bishop(cc, row, (char)(65 + i));
-						break;
-					case 'D':
-						cp = new Queen(cc, row, (char)(65 + i));
-						break;
-					case 'E':
-						cp = new King(cc, row, (char)(65 + i));
-						break;
-				}
-				if (cc == ChessColor.WHITE)
-				{
-					WhitePieces.Add(cp);
-				}
-				else
-				{
-					BlackPieces.Add(cp);
-				}
-			}
-		}
-
+		/// <summary>
+		/// Returns the piece at the specified row and column, or null if there is no piece there.
+		/// </summary>
+		/// <param name="row">The row of the piece to return</param>
+		/// <param name="col">The column of the piece to return</param>
+		/// <returns>The chess piece at the specified location.</returns>
 		public ChessPiece GetPieceByRowAndColumn(byte row, char col)
 		{
 			ChessPiece cp = null;
@@ -104,34 +47,6 @@ namespace ChessConsole.Models
 			return cp;
 		}
 
-		public void PrintBoard()
-		{
-			Console.WriteLine("-----------------------");
-			for(int i = 8; i >= 1; i--)
-			{
-				for (char c = 'A'; c <= 'H'; c++)
-				{
-					string stringToPrint = "-- ";
-					foreach(ChessPiece cp in WhitePieces)
-					{
-						if(cp.Row == i && cp.Column == c)
-						{
-							stringToPrint = "" + cp.GetColorChar() + cp.GetPieceChar() + " ";
-						}
-					}
 
-					foreach (ChessPiece cp in BlackPieces)
-					{
-						if (cp.Row == i && cp.Column == c)
-						{
-							stringToPrint = "" + cp.GetColorChar() + cp.GetPieceChar() + " ";
-						}
-					}
-					Console.Write(stringToPrint);
-				}
-				Console.WriteLine();
-			}
-			Console.WriteLine("-----------------------");
-		}
 	}
 }
