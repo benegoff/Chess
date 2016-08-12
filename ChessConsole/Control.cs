@@ -17,11 +17,11 @@ namespace ChessConsole
 			ChessBoard = new Board();
 			IsWhitesTurn = true;
 
-			GeneratePawns(ChessColor.BLACK);
-			GeneratePawns(ChessColor.WHITE);
+			//GeneratePawns(ChessColor.BLACK);
+			//GeneratePawns(ChessColor.WHITE);
 
-			GenerateOtherPieces(ChessColor.WHITE);
-			GenerateOtherPieces(ChessColor.BLACK);
+			//GenerateOtherPieces(ChessColor.WHITE);
+			//GenerateOtherPieces(ChessColor.BLACK);
 		}
 
 		public Board ChessBoard { get; set; }
@@ -97,7 +97,7 @@ namespace ChessConsole
 		/// </summary>
 		public void PrintBoard()
 		{
-			Console.WriteLine("-----------------------");
+			Console.WriteLine("#######################");
 			for (int i = 8; i >= 1; i--)
 			{
 				for (char c = 'A'; c <= 'H'; c++)
@@ -122,7 +122,15 @@ namespace ChessConsole
 				}
 				Console.WriteLine();
 			}
-			Console.WriteLine("-----------------------");
+			Console.WriteLine("#######################");
+			if(GetKingByColor(ChessColor.WHITE).IsInCheck)
+			{
+				Console.WriteLine("The White king is in check!");
+			}
+			if (GetKingByColor(ChessColor.BLACK).IsInCheck)
+			{
+				Console.WriteLine("The Black king is in check!");
+			}
 		}
 
 		/// <summary>
@@ -189,6 +197,7 @@ namespace ChessConsole
 			}
 
 			Console.WriteLine("Placed the " + cc + " " + piece + " on " + position + ".");
+			UpdateAllPossibleMoves();
 		}
 
 		/// <summary>
@@ -221,6 +230,7 @@ namespace ChessConsole
 						cp.Row = row2;
 						cp.Column = col2;
 						cp.HasMoved = true;
+						UpdateAllPossibleMoves();
 						if(IsWhitesTurn)
 						{
 							IsWhitesTurn = false;
@@ -305,6 +315,7 @@ namespace ChessConsole
 							cp1.Row = row2;
 							cp1.Column = col2;
 							cp1.HasMoved = true;
+							UpdateAllPossibleMoves();
 							if (IsWhitesTurn)
 							{
 								IsWhitesTurn = false;
@@ -738,5 +749,194 @@ namespace ChessConsole
 			return isValid;
 		}
 
+		/// <summary>
+		/// Updates the possible move list for every piece on the board.
+		/// </summary>
+		public void UpdateAllPossibleMoves()
+		{
+			foreach(ChessPiece cp in ChessBoard.WhitePieces)
+			{
+				UpdatePossibleMoves(cp);
+			}
+			foreach(ChessPiece cp in ChessBoard.BlackPieces)
+			{
+				UpdatePossibleMoves(cp);
+			}
+			UpdateKingCheckStatus(ChessColor.BLACK);
+			UpdateKingCheckStatus(ChessColor.WHITE);
+
+		}
+
+		/// <summary>
+		/// Updates a ChessPiece's possible moves.
+		/// </summary>
+		/// <param name="cp">The ChessPiece to update.</param>
+		public void UpdatePossibleMoves(ChessPiece cp)
+		{
+			cp.PossibleMoves = new List<Move>();
+			for(byte i = 1; i <= 8; i++)
+			{
+				for (char j = 'A'; j <= 'H'; j++)
+				{
+					if(CheckMoveValidity(cp, i, j, true) || CheckMoveValidity(cp, i, j, false))
+					{
+						Move m = new Move();
+						m.Column = j;
+						m.Row = i;
+
+						cp.PossibleMoves.Add(m);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Loops through all possible moves and updates the check status of a particular colored king.
+		/// </summary>
+		/// <param name="cc">The color of the king to check.</param>
+		public void UpdateKingCheckStatus(ChessColor cc)
+		{
+			King k = GetKingByColor(cc);
+			bool isInCheck = false;
+			if(cc == ChessColor.WHITE)
+			{
+				foreach(ChessPiece cp in ChessBoard.BlackPieces)
+				{
+					foreach(Move m in cp.PossibleMoves)
+					{
+						if(m.Column == k.Column && m.Row == k.Row)
+						{
+							isInCheck = true;
+						}
+					}
+				}
+			}
+			else
+			{
+				foreach (ChessPiece cp in ChessBoard.WhitePieces)
+				{
+					foreach (Move m in cp.PossibleMoves)
+					{
+						if (m.Column == k.Column && m.Row == k.Row)
+						{
+							isInCheck = true;
+						}
+					}
+				}
+			}
+			if(isInCheck)
+			{
+				k.IsInCheck = true;
+			}
+			else
+			{
+				k.IsInCheck = false;
+			}
+		}
+
+		/// <summary>
+		/// Takes in a ChessColor, and checks to see if that colored king is in check.
+		/// </summary>
+		/// <param name="cc">The color king to check.</param>
+		/// <returns>Whether or not the king is in check.</returns>
+		public bool CheckIfKingIsInCheck(ChessColor cc)
+		{
+			bool isInCheck = false;
+			King king = GetKingByColor(cc);
+
+			if(king.IsInCheck)
+			{
+				isInCheck = true;
+			}
+
+			return isInCheck;
+		}
+		
+		/// <summary>
+		/// Gets whether or not the king of the supplied color has any available moves.
+		/// </summary>
+		/// <param name="cc">The color of the king to check.</param>
+		/// <returns>Whether or not the king is in checkmate.</returns>
+		public bool CheckIfKingIsInCheckmate(ChessColor cc)
+		{
+			bool isInCheckmate = false;
+			King king = GetKingByColor(cc);
+			int movesToCheck = king.PossibleMoves.Count + 1;
+			int unavailableMoves = 0;
+
+			foreach(Move km in king.PossibleMoves)
+			{
+				bool moveIsNotValid = false;
+				if(cc == ChessColor.WHITE)
+				{
+					foreach(ChessPiece cp in ChessBoard.BlackPieces)
+					{
+						foreach(Move m in cp.PossibleMoves)
+						{
+							if(km.Column == m.Column && km.Row == m.Row)
+							{
+								moveIsNotValid = true;
+							}
+						}
+					}
+				}
+				else
+				{
+					foreach (ChessPiece cp in ChessBoard.WhitePieces)
+					{
+						foreach (Move m in cp.PossibleMoves)
+						{
+							if (km.Column == m.Column && km.Row == m.Row)
+							{
+								moveIsNotValid = true;
+							}
+						}
+					}
+				}
+
+				if(!moveIsNotValid)
+				{
+					unavailableMoves++;
+				}
+			}
+
+			if(unavailableMoves == movesToCheck)
+			{
+				isInCheckmate = true;
+			}
+
+			return isInCheckmate;
+		}
+
+		/// <summary>
+		/// Gets the instance of the king of a particular chess color.
+		/// </summary>
+		/// <param name="cc">The color of king to get.</param>
+		/// <returns>The king of the provided color.</returns>
+		public King GetKingByColor(ChessColor cc)
+		{
+			King king = new King();
+			if (cc == ChessColor.WHITE)
+			{
+				foreach (ChessPiece cp in ChessBoard.WhitePieces)
+				{
+					if (cp.GetType() == typeof(King))
+					{
+						king = (King)cp;
+					}
+				}
+			}
+			else
+			{
+				foreach (ChessPiece cp in ChessBoard.BlackPieces)
+				{
+					if (cp.GetType() == typeof(King))
+					{
+						king = (King)cp;
+					}
+				}
+			}
+			return king;
+		}
 	}
 }

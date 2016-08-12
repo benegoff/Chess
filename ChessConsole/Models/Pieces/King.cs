@@ -11,6 +11,8 @@ namespace ChessConsole.Models.Pieces
 	{
 		public King(ChessColor c = ChessColor.WHITE, byte row = 1, char col = 'A') : base(c, row, col) { }
 
+		public bool IsInCheck { get; set; }
+
 		public override char GetPieceChar()
 		{
 			return 'K';

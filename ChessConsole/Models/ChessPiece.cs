@@ -13,12 +13,14 @@ namespace ChessConsole.Models
 		public byte Row { get; set; }
 		public char Column { get; set; }
 		public bool HasMoved { get; set; }
+		public List<Move> PossibleMoves { get; set; }
 
 		public ChessPiece(ChessColor c = ChessColor.WHITE, byte row = 1, char col = 'A')
 		{
 			Color = c;
 			Row = row;
 			Column = col;
+			PossibleMoves = new List<Move>();
 		}
 
 		/// <summary>

@@ -32,6 +32,7 @@ namespace ChessConsole
 			{
 				PrintCommandResult(command);
 			}
+
 		}
 
 		/// <summary>

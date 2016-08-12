@@ -48,6 +48,7 @@
     <Compile Include="Enums\ChessColor.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\ChessPiece.cs" />
+    <Compile Include="Models\Move.cs" />
     <Compile Include="Models\Pieces\Bishop.cs" />
     <Compile Include="Models\Pieces\King.cs" />
     <Compile Include="Models\Pieces\Knight.cs" />
