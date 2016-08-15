@@ -1,7 +1,16 @@
 klf2
 qdh6
 kda8
+rdd8
 plb5
 b5 b6
 h6 h4
+f2 f1
+d8 d2
 b6 b7
+h4 h1
+a8 b7*
+f1 g1
+d2 a2
+g1 f1
+h4 h1

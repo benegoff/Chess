@@ -26,7 +26,6 @@ namespace ChessConsole
 		public void Run(string filePath)
 		{
 			Console.WriteLine("PROGRAM START");
-			Controller.PrintBoard();
 			string[] linesToParse = System.IO.File.ReadAllLines(filePath);
 			foreach (string command in linesToParse)
 			{
