@@ -47,5 +47,7 @@ namespace ChessConsole.Models
 			}
 			return c;
 		}
+
+		public abstract ChessPiece CopyPiece();
 	}
 }

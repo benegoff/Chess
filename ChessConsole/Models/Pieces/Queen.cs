@@ -11,6 +11,22 @@ namespace ChessConsole.Models.Pieces
 	{
 		public Queen(ChessColor c = ChessColor.WHITE, byte row = 1, char col = 'A') : base(c, row, col) { }
 
+		public override ChessPiece CopyPiece()
+		{
+			Queen q = new Queen();
+			q.Color = this.Color;
+			q.Row = this.Row;
+			q.Column = this.Column;
+			foreach (Move m in this.PossibleMoves)
+			{
+				Move m2 = new Move();
+				m2.Column = m.Column;
+				m2.Row = m.Row;
+				q.PossibleMoves.Add(m2);
+			}
+			return q;
+		}
+
 		public override char GetPieceChar()
 		{
 			return 'Q';

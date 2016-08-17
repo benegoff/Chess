@@ -14,16 +14,18 @@ namespace ChessConsole
 	{
 		public Control()
 		{
+			VC = new ValidityControl();
 			ChessBoard = new Board();
 			IsWhitesTurn = true;
 
-			//GeneratePawns(ChessColor.BLACK);
-			//GeneratePawns(ChessColor.WHITE);
+			GeneratePawns(ChessColor.BLACK);
+			GeneratePawns(ChessColor.WHITE);
 
-			//GenerateOtherPieces(ChessColor.WHITE);
-			//GenerateOtherPieces(ChessColor.BLACK);
+			GenerateOtherPieces(ChessColor.WHITE);
+			GenerateOtherPieces(ChessColor.BLACK);
 		}
 
+		public ValidityControl VC { get; set; }
 		public Board ChessBoard { get; set; }
 		public bool IsWhitesTurn { get; set; }
 
@@ -261,7 +263,7 @@ namespace ChessConsole
 				if (firstPieceWasFound && !secondPieceWasFound)
 				{
 					ChessPiece cp = ChessBoard.GetPieceByRowAndColumn(row1, col1);
-					if (CheckMoveValidity(cp, row2, col2, false, ChessBoard))
+					if (VC.CheckMoveValidity(cp, row2, col2, false, ChessBoard))
 					{
 
 						Move m = new Move();
@@ -350,7 +352,7 @@ namespace ChessConsole
 					}
 					else
 					{
-						if (CheckMoveValidity(cp1, row2, col2, true, ChessBoard))
+						if (VC.CheckMoveValidity(cp1, row2, col2, true, ChessBoard))
 						{
 
 							Move m = new Move();
@@ -522,387 +524,6 @@ namespace ChessConsole
 		}
 
 		/// <summary>
-		/// Runs validity check on a particular piece passed in.
-		/// </summary>
-		/// <param name="cp">The piece to be moved</param>
-		/// <param name="row">The row the piece is moving to</param>
-		/// <param name="col">The column the piece is moving to</param>
-		/// <param name="isCapturing">Whether or not the piece is capturing another piece.</param>
-		/// <param name="b">The instance of the board to check the validity of the move off of.</param>
-		/// <returns>Whether or not the specified move is valid.</returns>
-		public bool CheckMoveValidity(ChessPiece cp, byte row, char col, bool isCapturing, Board b)
-		{
-			bool isValid = false;
-			if(cp.GetType() == typeof(King))
-			{
-				isValid = CheckKingValidity(cp, row, col, isCapturing, b);
-			}
-			else if(cp.GetType() == typeof(Queen))
-			{
-				isValid = CheckQueenValidity(cp, row, col, isCapturing, b);
-			}
-			else if (cp.GetType() == typeof(Knight))
-			{
-				isValid = CheckKnightValidity(cp, row, col, isCapturing, b);
-			}
-			else if (cp.GetType() == typeof(Bishop))
-			{
-				isValid = CheckBishopValidity(cp, row, col, isCapturing, b);
-			}
-			else if (cp.GetType() == typeof(Rook))
-			{
-				isValid = CheckRookValidity(cp, row, col, isCapturing, b);
-			}
-			else if (cp.GetType() == typeof(Pawn))
-			{
-				isValid = CheckPawnValidity(cp, row, col, isCapturing, b);
-			}
-			return isValid;
-		}
-
-		/// <summary>
-		/// Checks to see if a particular Knight's movement is valid.
-		/// </summary>
-		/// <param name="cp">The instance of the Knight.</param>
-		/// <param name="row">The row the Knight is moving to.</param>
-		/// <param name="col">The column the Knight is moving to.</param>
-		/// <param name="isCapturing">Whether or not the piece is going to capture another piece.</param>
-		/// <param name="b">The instance of the board to check the validity of the Knight off of.</param>
-		/// <returns>True if the move is valid, false if the move is not.</returns>
-		public bool CheckKnightValidity(ChessPiece cp, byte row, char col, bool isCapturing, Board b)
-		{
-			bool isValid = false;
-			
-			if (Math.Abs(cp.Row - row) == 1)
-			{
-				if (Math.Abs(cp.Column - col) == 2)
-				{
-					isValid = true;
-					if (isCapturing)
-					{
-						if (b.GetPieceByRowAndColumn(row, col) == null)
-						{
-							isValid = false;
-						}
-						else if (b.GetPieceByRowAndColumn(row, col).Color == cp.Color)
-						{
-							isValid = false;
-						}
-					}
-					else if (b.GetPieceByRowAndColumn(row, col) != null)
-					{
-						isValid = false;
-						if (isCapturing && b.GetPieceByRowAndColumn(row, col).Color != cp.Color)
-						{
-							isValid = true;
-						}
-					}
-				}
-			}
-			else if (Math.Abs(cp.Column - col) == 1)
-			{
-				if (Math.Abs(cp.Row - row) == 2)
-				{
-					isValid = true;
-					if (isCapturing)
-					{
-						if (b.GetPieceByRowAndColumn(row, col) == null)
-						{
-							isValid = false;
-						}
-						else if (b.GetPieceByRowAndColumn(row, col).Color == cp.Color)
-						{
-							isValid = false;
-						}
-					}
-					else if (b.GetPieceByRowAndColumn(row, col) != null)
-					{
-						isValid = false;
-						if (isCapturing && ChessBoard.GetPieceByRowAndColumn(row, col).Color != cp.Color)
-						{
-							isValid = true;
-						}
-					}
-				}
-			}
-			return isValid;
-		}
-
-		/// <summary>
-		/// Checks to see if a particular Bishop's movement is valid.
-		/// </summary>
-		/// <param name="cp">The instance of the Bishop</param>
-		/// <param name="row">The row the Bishop is moving to.</param>
-		/// <param name="col">The column the Bishop is moving to.</param>
-		/// <param name="isCapturing">Whether or not the piece is going to capture another piece.</param>
-		/// <param name="b">The instance of the board to check the validity of the Bishop off of.</param>
-		/// <returns>True if the move is valid, false if the move is not.</returns>
-		public bool CheckBishopValidity(ChessPiece cp, byte row, char col, bool isCapturing, Board b)
-		{
-			bool isValid = false;
-			if (Math.Abs(cp.Row - row) == Math.Abs(cp.Column - col) && cp.Row - row != 0)
-			{
-				isValid = true;
-				if (isCapturing)
-				{
-					if (b.GetPieceByRowAndColumn(row, col) == null)
-					{
-						isValid = false;
-					}
-					else if (b.GetPieceByRowAndColumn(row, col).Color == cp.Color)
-					{
-						isValid = false;
-					}
-				}
-				else
-				{
-					byte distance = (byte)Math.Abs((cp.Column - col));
-					if (isCapturing)
-					{
-						distance -= 1;
-					}
-					bool movingUp = cp.Row - row < 0 ? true : false;
-					bool movingRight = cp.Column - col < 0 ? true : false;
-
-					for (int i = 1; i <= distance && isValid; i++)
-					{
-						if (movingUp)
-						{
-							if (movingRight)
-							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column + i))))
-								{
-									isValid = false;
-								}
-							}
-							else
-							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))))
-								{
-									isValid = false;
-								}
-							}
-						}
-						else
-						{
-							if (movingRight)
-							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))))
-								{
-									isValid = false;
-								}
-							}
-							else
-							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column - i))))
-								{
-									isValid = false;
-								}
-							}
-						}
-
-					}
-				}
-				
-			}
-			return isValid;
-		}
-
-		/// <summary>
-		/// Checks to see if a particular Rook's movement is valid.
-		/// </summary>
-		/// <param name="cp">The instance of the Rook</param>
-		/// <param name="row">The row the Rook is moving to.</param>
-		/// <param name="col">The column the Rook is moving to.</param>
-		/// <param name="isCapturing">Whether or not the piece is going to capture another piece.</param>
-		/// <param name="b">The instance of the board to check the validity of the Rook off of.</param>
-		/// <returns>True if the move is valid, false if the move is not.</returns>
-		public bool CheckRookValidity(ChessPiece cp, byte row, char col, bool isCapturing, Board b)
-		{
-			bool isValid = false;
-			if (!(cp.Row == row && cp.Column == col))
-			{
-				
-				if (cp.Row == row)
-				{
-					isValid = true;
-					if(isCapturing)
-					{
-						if (b.GetPieceByRowAndColumn(row, col) == null)
-						{
-							isValid = false;
-						}
-						else if (b.GetPieceByRowAndColumn(row, col).Color == cp.Color)
-						{
-							isValid = false;
-						}
-					}
-					else
-					{
-						byte distance = (byte)Math.Abs((cp.Column - col));
-						if (isCapturing)
-						{
-							distance -= 1;
-						}
-						bool movingUp = cp.Column - col < 0 ? true : false;
-
-						for (int i = 0; i < distance; i++)
-						{
-							if (movingUp)
-							{
-								if (ChessBoard.WhitePieces.Contains(ChessBoard.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column + 1 + i))) || ChessBoard.BlackPieces.Contains(ChessBoard.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column + 1 + i))))
-								{
-									isValid = false;
-								}
-							}
-							else
-							{
-								if (ChessBoard.WhitePieces.Contains(ChessBoard.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column - 1 - i))) || ChessBoard.BlackPieces.Contains(ChessBoard.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column - 1 - i))))
-								{
-									isValid = false;
-								}
-							}
-
-						}
-					}
-					
-				}
-				else if (cp.Column == col)
-				{
-					isValid = true;
-					byte distance = (byte)Math.Abs((cp.Row - row));
-					if (isCapturing)
-					{
-						distance -= 1;
-					}
-					bool movingRight = cp.Row - row < 0 ? true : false;
-
-					for (int i = 0; i < distance && isValid; i++)
-					{
-						if (movingRight)
-						{
-							if (ChessBoard.WhitePieces.Contains(ChessBoard.GetPieceByRowAndColumn((byte)(cp.Row + 1 + i), cp.Column)) || ChessBoard.BlackPieces.Contains(ChessBoard.GetPieceByRowAndColumn((byte)(cp.Row + 1 + i), cp.Column)))
-							{
-								isValid = false;
-							}
-						}
-						else
-						{
-							if (ChessBoard.WhitePieces.Contains(ChessBoard.GetPieceByRowAndColumn((byte)(cp.Row - 1 - i), cp.Column)) || ChessBoard.BlackPieces.Contains(ChessBoard.GetPieceByRowAndColumn((byte)(cp.Row - 1 - i), cp.Column)))
-							{
-								isValid = false;
-							}
-						}
-
-					}
-				}
-			}
-			return isValid;
-		}
-
-		/// <summary>
-		/// Checks to see if a particular Queen's movement is valid.
-		/// </summary>
-		/// <param name="cp">The instance of the Queen</param>
-		/// <param name="row">The row the Queen is moving to.</param>
-		/// <param name="col">The column the Queen is moving to.</param>
-		/// <param name="isCapturing">Whether or not the piece is going to capture another piece.</param>
-		/// <param name="b">The instance of the board to check the validity of the Queen off of.</param>
-		/// <returns>True if the move is valid, false if the move is not.</returns>
-		public bool CheckQueenValidity(ChessPiece cp, byte row, char col, bool isCapturing, Board b)
-		{
-			bool isValid = false;
-			if(CheckRookValidity(cp, row, col, isCapturing, b) || CheckBishopValidity(cp, row, col, isCapturing, b))
-			{
-				isValid = true;
-			}
-			return isValid;
-		}
-
-		/// <summary>
-		/// Checks to see if a particular King's movement is valid.
-		/// </summary>
-		/// <param name="cp">The instance of the King</param>
-		/// <param name="row">The row the King is moving to.</param>
-		/// <param name="col">The column the King is moving to.</param>
-		/// <param name="isCapturing">Whether or not the piece is going to capture another piece.</param>
-		/// <param name="b">The instance of the board to check the validity of the King off of.</param>
-		/// <returns>True if the move is valid, false if the move is not.</returns>
-		public bool CheckKingValidity(ChessPiece cp, byte row, char col, bool isCapturing, Board b)
-		{
-			bool isValid = false;
-			if (Math.Abs(cp.Row - row) <= 1 && Math.Abs(cp.Column - col) <= 1 && !(cp.Row == row && cp.Column == col))
-			{
-				isValid = CheckQueenValidity(cp, row, col, isCapturing, b);
-			}
-			return isValid;
-		}
-
-		/// <summary>
-		/// Checks to see if a particular Pawn's movement is valid.
-		/// </summary>
-		/// <param name="cp">The instance of the Pawn</param>
-		/// <param name="row">The row the Pawn is moving to.</param>
-		/// <param name="col">The column the Pawn is moving to.</param>
-		/// <param name="isCapturing">Whether or not the piece is going to capture another piece.</param>
-		/// <param name="b">The instance of the board to check the validity of the Pawn off of.</param>
-		/// <returns>True if the move is valid, false if the move is not.</returns>
-		public bool CheckPawnValidity(ChessPiece cp, byte row, char col, bool isCapturing, Board b)
-		{
-			bool isValid = false;
-			int rowDistance = 1;
-			int rowDistanceToCheck = 0;
-			if (cp.Color == ChessColor.BLACK)
-			{
-				rowDistanceToCheck = cp.Row - row;
-			}
-			else
-			{
-				rowDistanceToCheck = row - cp.Row;
-			}
-			if (!(cp.Row == row))
-			{
-				if (isCapturing)
-				{
-					if(Math.Abs(col - cp.Column) == 1 && rowDistanceToCheck == 1)
-					{
-						if(b.GetPieceByRowAndColumn(row, col) != null)
-						{
-							isValid = true;
-						}
-					}
-				}
-				else
-				{
-					
-					if (!cp.HasMoved)
-					{
-						rowDistance = 2;
-					}
-
-					if(cp.Column - col == 0 && rowDistanceToCheck > 0 && rowDistanceToCheck <= rowDistance)
-					{
-						isValid = true;
-					}
-
-					if(isValid)
-					{
-						for (int i = 1; i <= rowDistance; i++)
-						{
-							if (b.GetPieceByRowAndColumn((byte)(cp.Row + i), cp.Column) != null)
-							{
-								isValid = false;
-							}
-						}
-					}
-				}
-			}
-			
-			
-			return isValid;
-		}
-
-		/// <summary>
 		/// Updates the possible move list for every piece on the board.
 		/// </summary>
 		/// <param name="b">The instance of the board to check the validity of all possible moves.</param>
@@ -933,7 +554,7 @@ namespace ChessConsole
 			{
 				for (char j = 'A'; j <= 'H'; j++)
 				{
-					if(CheckMoveValidity(cp, i, j, true, b) || CheckMoveValidity(cp, i, j, false, b))
+					if(VC.CheckMoveValidity(cp, i, j, true, b) || VC.CheckMoveValidity(cp, i, j, false, b))
 					{
 						
 						Move m = new Move();
@@ -1047,7 +668,7 @@ namespace ChessConsole
 		{
 			bool isValid = true;
 
-			Board b = CloneBoard();
+			Board b = CloneBoard(ChessBoard);
 			ChessPiece p = b.GetPieceByRowAndColumn(cp.Row, cp.Column);
 
 			if (isCapturing)
@@ -1084,105 +705,18 @@ namespace ChessConsole
 		/// Creates a copy of a collection of pieces based on the passed in color.
 		/// </summary>
 		/// <param name="cc">The color of the piece collection to copy.</param>
+		/// <param name="b">The instance of the board to copy the pieces from.</param>
 		/// <returns>A new copy of the collection.</returns>
-		public List<ChessPiece> CopyPieces(ChessColor cc)
+		public List<ChessPiece> CopyPieces(ChessColor cc, Board board)
 		{
 
-			List<ChessPiece> pieces = (cc == ChessColor.WHITE ? ChessBoard.WhitePieces : ChessBoard.BlackPieces);
+			List<ChessPiece> pieces = (cc == ChessColor.WHITE ? board.WhitePieces : board.BlackPieces);
 			List<ChessPiece> newPieces = new List<ChessPiece>();
 
 			foreach (ChessPiece cp in pieces)
 			{
-				if (cp.GetType() == typeof(King))
-				{
-					King k = new King();
-					k.Color = cp.Color;
-					k.Row = cp.Row;
-					k.Column = cp.Column;
-					foreach (Move m in cp.PossibleMoves)
-					{
-						Move m2 = new Move();
-						m2.Column = m.Column;
-						m2.Row = m.Row;
-						k.PossibleMoves.Add(m2);
-					}
-					newPieces.Add(k);
-				}
-				else if (cp.GetType() == typeof(Queen))
-				{
-					Queen q = new Queen();
-					q.Color = cp.Color;
-					q.Row = cp.Row;
-					q.Column = cp.Column;
-					foreach (Move m in cp.PossibleMoves)
-					{
-						Move m2 = new Move();
-						m2.Column = m.Column;
-						m2.Row = m.Row;
-						q.PossibleMoves.Add(m2);
-					}
-					newPieces.Add(q);
-				}
-				else if (cp.GetType() == typeof(Knight))
-				{
-					Knight k = new Knight();
-					k.Color = cp.Color;
-					k.Row = cp.Row;
-					k.Column = cp.Column;
-					foreach (Move m in cp.PossibleMoves)
-					{
-						Move m2 = new Move();
-						m2.Column = m.Column;
-						m2.Row = m.Row;
-						k.PossibleMoves.Add(m2);
-					}
-					newPieces.Add(k);
-				}
-				else if (cp.GetType() == typeof(Bishop))
-				{
-					Bishop b = new Bishop();
-					b.Color = cp.Color;
-					b.Row = cp.Row;
-					b.Column = cp.Column;
-					foreach (Move m in cp.PossibleMoves)
-					{
-						Move m2 = new Move();
-						m2.Column = m.Column;
-						m2.Row = m.Row;
-						b.PossibleMoves.Add(m2);
-					}
-					newPieces.Add(b);
-				}
-				else if (cp.GetType() == typeof(Rook))
-				{
-					Rook r = new Rook();
-					r.Color = cp.Color;
-					r.Row = cp.Row;
-					r.Column = cp.Column;
-					foreach (Move m in cp.PossibleMoves)
-					{
-						Move m2 = new Move();
-						m2.Column = m.Column;
-						m2.Row = m.Row;
-						r.PossibleMoves.Add(m2);
-					}
-					newPieces.Add(r);
-				}
-				else if (cp.GetType() == typeof(Pawn))
-				{
-					Pawn p = new Pawn();
-					p.Color = cp.Color;
-					p.Row = cp.Row;
-					p.Column = cp.Column;
-					foreach (Move m in cp.PossibleMoves)
-					{
-						Move m2 = new Move();
-						m2.Column = m.Column;
-						m2.Row = m.Row;
-						p.PossibleMoves.Add(m2);
-					}
-					newPieces.Add(p);
-				}
+				ChessPiece newPiece = cp.CopyPiece();
+				newPieces.Add(newPiece);
 			}
 			return newPieces;
 		}
@@ -1190,17 +724,18 @@ namespace ChessConsole
 		/// <summary>
 		/// Creates a clone of the current board.
 		/// </summary>
+		/// <param name="b">The board to return a copy of.</param>
 		/// <returns>A new board which is a copy of the original board.</returns>
-		public Board CloneBoard()
+		public Board CloneBoard(Board b)
 		{
-			Board b = new Board();
-			List<ChessPiece> whitePieceCopy = CopyPieces(ChessColor.WHITE);
-			List<ChessPiece> blackPieceCopy = CopyPieces(ChessColor.BLACK);
+			Board newBoard = new Board();
+			List<ChessPiece> whitePieceCopy = CopyPieces(ChessColor.WHITE, b);
+			List<ChessPiece> blackPieceCopy = CopyPieces(ChessColor.BLACK, b);
 
-			b.WhitePieces = whitePieceCopy;
-			b.BlackPieces = blackPieceCopy;
+			newBoard.WhitePieces = whitePieceCopy;
+			newBoard.BlackPieces = blackPieceCopy;
 
-			return b;
+			return newBoard;
 		}
 
 		/// <summary>
