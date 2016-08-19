@@ -23,11 +23,30 @@ namespace ChessConsole
 
 			GenerateOtherPieces(ChessColor.WHITE);
 			GenerateOtherPieces(ChessColor.BLACK);
+			UpdateAllPossibleMoves(ChessBoard);
 		}
 
 		public ValidityControl VC { get; set; }
 		public Board ChessBoard { get; set; }
 		public bool IsWhitesTurn { get; set; }
+
+		public void PlayerTurn()
+		{
+			PrintBoard();
+			ChessColor color = IsWhitesTurn ? ChessColor.WHITE : ChessColor.BLACK;
+			List <ChessPiece> pieces = IsWhitesTurn ? ChessBoard.WhitePieces : ChessBoard.BlackPieces;
+			foreach(ChessPiece cp in pieces)
+			{
+				if(cp.PossibleMoves.Count > 0)
+				{
+					Console.WriteLine(cp.GetType().Name + " at " + cp.Column + cp.Row);
+					foreach(Move m in cp.PossibleMoves)
+					{
+						Console.WriteLine("     " + m.Column + m.Row);
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Creates Pawns of the specified color in the standard starting positions

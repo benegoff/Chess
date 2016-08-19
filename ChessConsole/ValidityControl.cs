@@ -167,7 +167,7 @@ namespace ChessConsole
 							}
 							else
 							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))))
+								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))))
 								{
 									isValid = false;
 								}
@@ -177,7 +177,7 @@ namespace ChessConsole
 						{
 							if (movingRight)
 							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))))
+								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))))
 								{
 									isValid = false;
 								}
@@ -227,64 +227,72 @@ namespace ChessConsole
 							isValid = false;
 						}
 					}
-					else
-					{
-						byte distance = (byte)Math.Abs((cp.Column - col));
-						if (isCapturing)
-						{
-							distance -= 1;
-						}
-						bool movingUp = cp.Column - col < 0 ? true : false;
-
-						for (int i = 0; i < distance; i++)
-						{
-							if (movingUp)
-							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column + 1 + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column + 1 + i))))
-								{
-									isValid = false;
-								}
-							}
-							else
-							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column - 1 - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column - 1 - i))))
-								{
-									isValid = false;
-								}
-							}
-
-						}
-					}
-
-				}
-				else if (cp.Column == col)
-				{
-					isValid = true;
-					byte distance = (byte)Math.Abs((cp.Row - row));
+					byte distance = (byte)Math.Abs((cp.Column - col));
 					if (isCapturing)
 					{
 						distance -= 1;
 					}
-					bool movingRight = cp.Row - row < 0 ? true : false;
+					bool movingRight = cp.Column - col < 0 ? true : false;
 
-					for (int i = 0; i < distance && isValid; i++)
+					for (int i = 0; i < distance; i++)
 					{
 						if (movingRight)
 						{
-							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + 1 + i), cp.Column)) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + 1 + i), cp.Column)))
+							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column + 1 + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column + 1 + i))))
 							{
 								isValid = false;
 							}
 						}
 						else
 						{
-							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - 1 - i), cp.Column)) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - 1 - i), cp.Column)))
+							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column - 1 - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn(cp.Row, (char)(cp.Column - 1 - i))))
 							{
 								isValid = false;
 							}
 						}
 
 					}
+
+
+				}
+				else if (cp.Column == col)
+				{
+					isValid = true;
+					if (isCapturing)
+					{
+						if (b.GetPieceByRowAndColumn(row, col) == null)
+						{
+							isValid = false;
+						}
+						else if (b.GetPieceByRowAndColumn(row, col).Color == cp.Color)
+						{
+							isValid = false;
+						}
+					}
+					byte distance = (byte)Math.Abs((cp.Row - row));
+					if (isCapturing)
+					{
+						distance -= 1;
+					}
+					bool movingUp = cp.Row - row < 0 ? true : false;
+
+					for (int i = 1; i <= distance && isValid; i++)
+					{
+						if (movingUp)
+						{
+							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), cp.Column)) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), cp.Column)))
+							{
+								isValid = false;
+							}
+						}
+						else
+						{
+							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), cp.Column)) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), cp.Column)))
+							{
+								isValid = false;
+							}
+						}
+					}	
 				}
 			}
 			return isValid;

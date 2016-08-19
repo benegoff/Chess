@@ -14,11 +14,12 @@ namespace ChessConsole
 		public static void Main(string[] args)
 		{
 			Control c = new Control();
-			if (args.Length > 0)
-			{
-				CommandReader cr = new CommandReader(c);
-				cr.Run(args[0]);
-			}
+			c.PlayerTurn();
+			//if (args.Length > 0)
+			//{
+			//	CommandReader cr = new CommandReader(c);
+			//	cr.Run(args[0]);
+			//}
 		}
 	}
 }
