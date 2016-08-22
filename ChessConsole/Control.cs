@@ -18,11 +18,13 @@ namespace ChessConsole
 			ChessBoard = new Board();
 			IsWhitesTurn = true;
 
+
 			GeneratePawns(ChessColor.BLACK);
 			GeneratePawns(ChessColor.WHITE);
 
 			GenerateOtherPieces(ChessColor.WHITE);
 			GenerateOtherPieces(ChessColor.BLACK);
+			
 			UpdateAllPossibleMoves(ChessBoard);
 		}
 
@@ -32,20 +34,97 @@ namespace ChessConsole
 
 		public void PlayerTurn()
 		{
+			string patternMovement = @"^([A-H])([1-8])\s*([A-H])([1-8])$";
+			string patternCapture = @"^([A-H])([1-8])\s*([A-H])([1-8])[/*]$";
+
 			PrintBoard();
-			ChessColor color = IsWhitesTurn ? ChessColor.WHITE : ChessColor.BLACK;
 			List <ChessPiece> pieces = IsWhitesTurn ? ChessBoard.WhitePieces : ChessBoard.BlackPieces;
-			foreach(ChessPiece cp in pieces)
+			ChessPiece choice = PromptForPiece(pieces);
+			Move m = PromptForMove(choice);
+
+			string command = "" + choice.Column + choice.Row + " " + m.Column + m.Row;
+			if(ChessBoard.GetPieceByRowAndColumn(m.Row, m.Column) != null)
 			{
-				if(cp.PossibleMoves.Count > 0)
+				command += "*";
+				Match matchCapture = Regex.Match(command, patternCapture, RegexOptions.None);
+				CapturePiece(matchCapture);
+			}
+			else
+			{
+				Match matchMovement = Regex.Match(command, patternMovement, RegexOptions.None);
+				MovePieces(matchMovement);
+			}
+			
+		}
+
+		private Move PromptForMove(ChessPiece cp)
+		{
+			int selection = 0;
+			bool isValid = false;
+			while (!isValid)
+			{
+				Console.WriteLine("Please enter which move you would like to make:");
+				for (int i = 0; i < cp.PossibleMoves.Count; i++)
 				{
-					Console.WriteLine(cp.GetType().Name + " at " + cp.Column + cp.Row);
-					foreach(Move m in cp.PossibleMoves)
-					{
-						Console.WriteLine("     " + m.Column + m.Row);
-					}
+					Console.WriteLine((i + 1) + ": " + cp.PossibleMoves[i].Column + cp.PossibleMoves[i].Row);
+				}
+
+				Console.Write("Your selection: ");
+				string unparsedSelection = Console.ReadLine();
+
+				isValid = int.TryParse(unparsedSelection, out selection);
+
+				if (selection < 1 || selection > cp.PossibleMoves.Count)
+				{
+					isValid = false;
+				}
+
+				if (!isValid)
+				{
+					Console.WriteLine("That's not a valid input!");
 				}
 			}
+			return cp.PossibleMoves[selection - 1];
+		}
+
+
+		private ChessPiece PromptForPiece(List<ChessPiece> pieces)
+		{
+			int selection = 0;
+			List<ChessPiece> moveablePieces = new List<ChessPiece>();
+			foreach (ChessPiece cp in pieces)
+			{
+				if (cp.PossibleMoves.Count > 0)
+				{
+					moveablePieces.Add(cp);
+				}
+			}
+
+			bool isValid = false;
+			while(!isValid)
+			{
+				Console.WriteLine("Please enter which piece you would like to move:");
+				for (int i = 0; i < moveablePieces.Count; i++)
+				{
+					Console.WriteLine((i + 1) + ": " + moveablePieces[i].GetType().Name + " at " + moveablePieces[i].Column + moveablePieces[i].Row);
+				}
+
+				Console.Write("Your selection: ");
+				string unparsedSelection = Console.ReadLine();
+
+				isValid = int.TryParse(unparsedSelection, out selection);
+
+				if(selection < 1 || selection > moveablePieces.Count)
+				{
+					isValid = false;
+				}
+
+				if(!isValid)
+				{
+					Console.WriteLine("That's not a valid input!");
+				}
+			}
+			return moveablePieces[selection - 1];
 		}
 
 		/// <summary>
@@ -165,10 +244,10 @@ namespace ChessConsole
 						Console.WriteLine("The Black king is in check!");
 					}
 				}
-				else
-				{
-					Console.WriteLine("The Black king is not in check.");
-				}
+				//else
+				//{
+				//	Console.WriteLine("The Black king is not in check.");
+				//}
 			}
 			else
 			{
@@ -183,10 +262,10 @@ namespace ChessConsole
 						Console.WriteLine("The White king is in check!");
 					}
 				}
-				else
-				{
-					Console.WriteLine("The White king is not in check.");
-				}
+				//else
+				//{
+				//	Console.WriteLine("The White king is not in check.");
+				//}
 			}
 		}
 
@@ -298,7 +377,6 @@ namespace ChessConsole
 							UpdateAllPossibleMoves(ChessBoard);
 							UpdateKingCheckStatus(cp.Color == ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE, ChessBoard);
 							Console.WriteLine("The piece at " + position1 + " was moved to " + position2 + ".");
-							PrintBoard();
 							PrintResultOfTurn();
 							ChangeTurns();
 						}
@@ -326,7 +404,7 @@ namespace ChessConsole
 			{
 				Console.WriteLine("It's not your turn!");
 			}
-
+			PlayerTurn();
 
 		}
 
@@ -395,7 +473,6 @@ namespace ChessConsole
 								UpdateAllPossibleMoves(ChessBoard);
 								UpdateKingCheckStatus(cp1.Color == ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE, ChessBoard);
 								Console.WriteLine("The piece at " + position1 + " moved to and captured the piece at " + position2 + ".");
-								PrintBoard();
 								PrintResultOfTurn();
 								ChangeTurns();
 							}
@@ -418,6 +495,7 @@ namespace ChessConsole
 				}
 
 			}
+			PlayerTurn();
 
 		}
 

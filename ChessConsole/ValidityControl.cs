@@ -385,13 +385,27 @@ namespace ChessConsole
 
 					if (isValid)
 					{
-						for (int i = 1; i <= rowDistance; i++)
+						if(cp.Color == ChessColor.WHITE)
 						{
-							if (b.GetPieceByRowAndColumn((byte)(cp.Row + i), cp.Column) != null)
+							for (int i = 1; i <= rowDistance; i++)
 							{
-								isValid = false;
+								if (b.GetPieceByRowAndColumn((byte)(cp.Row + i), cp.Column) != null)
+								{
+									isValid = false;
+								}
 							}
 						}
+						else
+						{
+							for (int i = 1; i <= rowDistance; i++)
+							{
+								if (b.GetPieceByRowAndColumn((byte)(cp.Row - i), cp.Column) != null)
+								{
+									isValid = false;
+								}
+							}
+						}
+						
 					}
 				}
 			}
