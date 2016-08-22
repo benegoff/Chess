@@ -57,16 +57,71 @@ namespace ChessConsole
 			
 		}
 
+		private void PromptForPawnPromotion(ChessPiece cp)
+		{
+			ChessPiece newPiece = new Pawn();
+			bool isValid = false;
+			int choice = 0;
+			while (!isValid)
+			{
+				Console.WriteLine("Which piece would you like to promote your pawn to?");
+				Console.WriteLine("1: Rook");
+				Console.WriteLine("2: Knight");
+				Console.WriteLine("3: Bishop");
+				Console.WriteLine("4: Queen");
+				Console.Write("Your Selection: ");
+				string unparsedChoice = Console.ReadLine();
+				isValid = int.TryParse(unparsedChoice, out choice);
+				if(isValid)
+				{
+					if(choice < 1 || choice > 4)
+					{
+						isValid = false;
+						Console.WriteLine("That is not a valid choice.");
+					}
+				}
+			}
+
+			switch(choice)
+			{
+				case 1:
+					newPiece = new Rook(cp.Color, cp.Row, cp.Column);
+					break;
+				case 2:
+					newPiece = new Knight(cp.Color, cp.Row, cp.Column);
+					break;
+				case 3:
+					newPiece = new Bishop(cp.Color, cp.Row, cp.Column);
+					break;
+				case 4:
+					newPiece = new Queen(cp.Color, cp.Row, cp.Column);
+					break;
+			}
+
+			List<ChessPiece> pieces = cp.Color == ChessColor.WHITE ? ChessBoard.WhitePieces : ChessBoard.BlackPieces;
+			pieces.Remove(cp);
+			pieces.Add(newPiece);
+
+		}
+
 		private Move PromptForMove(ChessPiece cp)
 		{
 			int selection = 0;
 			bool isValid = false;
+			List<Move> ListOfMoves = new List<Move>();
+			foreach(Move m in cp.PossibleMoves)
+			{
+				if(CheckValidityOfHypotheticalMove(cp, m, true) || CheckValidityOfHypotheticalMove(cp, m, false))
+				{
+					ListOfMoves.Add(m);
+				}
+			}
 			while (!isValid)
 			{
 				Console.WriteLine("Please enter which move you would like to make:");
-				for (int i = 0; i < cp.PossibleMoves.Count; i++)
+				for (int i = 0; i < ListOfMoves.Count; i++)
 				{
-					Console.WriteLine((i + 1) + ": " + cp.PossibleMoves[i].Column + cp.PossibleMoves[i].Row);
+					Console.WriteLine((i + 1) + ": " + ListOfMoves[i].Column + ListOfMoves[i].Row);
 				}
 
 				Console.Write("Your selection: ");
@@ -74,7 +129,7 @@ namespace ChessConsole
 
 				isValid = int.TryParse(unparsedSelection, out selection);
 
-				if (selection < 1 || selection > cp.PossibleMoves.Count)
+				if (selection < 1 || selection > ListOfMoves.Count)
 				{
 					isValid = false;
 				}
@@ -84,9 +139,8 @@ namespace ChessConsole
 					Console.WriteLine("That's not a valid input!");
 				}
 			}
-			return cp.PossibleMoves[selection - 1];
+			return ListOfMoves[selection - 1];
 		}
-
 
 		private ChessPiece PromptForPiece(List<ChessPiece> pieces)
 		{
@@ -96,7 +150,18 @@ namespace ChessConsole
 			{
 				if (cp.PossibleMoves.Count > 0)
 				{
-					moveablePieces.Add(cp);
+					List<Move> ListOfMoves = new List<Move>();
+					foreach (Move m in cp.PossibleMoves)
+					{
+						if (CheckValidityOfHypotheticalMove(cp, m, true) || CheckValidityOfHypotheticalMove(cp, m, false))
+						{
+							ListOfMoves.Add(m);
+						}
+					}
+					if(ListOfMoves.Count > 0)
+					{
+						moveablePieces.Add(cp);
+					}
 				}
 			}
 
@@ -378,6 +443,23 @@ namespace ChessConsole
 							UpdateKingCheckStatus(cp.Color == ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE, ChessBoard);
 							Console.WriteLine("The piece at " + position1 + " was moved to " + position2 + ".");
 							PrintResultOfTurn();
+							if (cp.GetType() == typeof(Pawn))
+							{
+								if (cp.Color == ChessColor.WHITE)
+								{
+									if (cp.Row == 8)
+									{
+										PromptForPawnPromotion(cp);
+									}
+								}
+								else
+								{
+									if (cp.Row == 1)
+									{
+										PromptForPawnPromotion(cp);
+									}
+								}
+							}
 							ChangeTurns();
 						}
 						else
@@ -474,6 +556,23 @@ namespace ChessConsole
 								UpdateKingCheckStatus(cp1.Color == ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE, ChessBoard);
 								Console.WriteLine("The piece at " + position1 + " moved to and captured the piece at " + position2 + ".");
 								PrintResultOfTurn();
+								if (cp1.GetType() == typeof(Pawn))
+								{
+									if (cp1.Color == ChessColor.WHITE)
+									{
+										if (cp1.Row == 8)
+										{
+											PromptForPawnPromotion(cp1);
+										}
+									}
+									else
+									{
+										if (cp1.Row == 1)
+										{
+											PromptForPawnPromotion(cp1);
+										}
+									}
+								}
 								ChangeTurns();
 							}
 							else
@@ -773,10 +872,10 @@ namespace ChessConsole
 				switch(cp.Color)
 				{
 					case ChessColor.WHITE:
-						b.WhitePieces.Remove(b.GetPieceByRowAndColumn(m.Row, m.Column));
+						b.BlackPieces.Remove(b.GetPieceByRowAndColumn(m.Row, m.Column));
 						break;
 					case ChessColor.BLACK:
-						b.BlackPieces.Remove(b.GetPieceByRowAndColumn(m.Row, m.Column));
+						b.WhitePieces.Remove(b.GetPieceByRowAndColumn(m.Row, m.Column));
 						break;
 				}
 				

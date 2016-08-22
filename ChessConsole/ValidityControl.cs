@@ -144,54 +144,51 @@ namespace ChessConsole
 						isValid = false;
 					}
 				}
-				else
+				byte distance = (byte)Math.Abs((cp.Column - col));
+				if (isCapturing)
 				{
-					byte distance = (byte)Math.Abs((cp.Column - col));
-					if (isCapturing)
-					{
-						distance -= 1;
-					}
-					bool movingUp = cp.Row - row < 0 ? true : false;
-					bool movingRight = cp.Column - col < 0 ? true : false;
+					distance -= 1;
+				}
+				bool movingUp = cp.Row - row < 0 ? true : false;
+				bool movingRight = cp.Column - col < 0 ? true : false;
 
-					for (int i = 1; i <= distance && isValid; i++)
+				for (int i = 1; i <= distance && isValid; i++)
+				{
+					if (movingUp)
 					{
-						if (movingUp)
+						if (movingRight)
 						{
-							if (movingRight)
+							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column + i))))
 							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column + i))))
-								{
-									isValid = false;
-								}
-							}
-							else
-							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))))
-								{
-									isValid = false;
-								}
+								isValid = false;
 							}
 						}
 						else
 						{
-							if (movingRight)
+							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row + i), (char)(cp.Column - i))))
 							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))))
-								{
-									isValid = false;
-								}
-							}
-							else
-							{
-								if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column - i))))
-								{
-									isValid = false;
-								}
+								isValid = false;
 							}
 						}
-
 					}
+					else
+					{
+						if (movingRight)
+						{
+							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column + i))))
+							{
+								isValid = false;
+							}
+						}
+						else
+						{
+							if (b.WhitePieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column - i))) || b.BlackPieces.Contains(b.GetPieceByRowAndColumn((byte)(cp.Row - i), (char)(cp.Column - i))))
+							{
+								isValid = false;
+							}
+						}
+					}
+
 				}
 
 			}
@@ -364,7 +361,7 @@ namespace ChessConsole
 				{
 					if (Math.Abs(col - cp.Column) == 1 && rowDistanceToCheck == 1)
 					{
-						if (b.GetPieceByRowAndColumn(row, col) != null)
+						if (b.GetPieceByRowAndColumn(row, col) != null && b.GetPieceByRowAndColumn(row, col).Color != cp.Color)
 						{
 							isValid = true;
 						}
