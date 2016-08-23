@@ -5,8 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Chess"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
+        Title="MainWindow" Height="600" Width="800">
+    <Grid x:Name="VisualGame">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="80*"/>
+        </Grid.RowDefinitions>
+        <Viewbox>
+            <Label x:Name="InfoLabel"/>
+        </Viewbox>
+        
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1">
+            <Grid x:Name="VisualChessBoard"
+                  Width="400"
+                  Height="400"
+                  Margin="15">
+            </Grid>
+        </StackPanel>
         
     </Grid>
+    
 </Window>

@@ -4,13 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess
+namespace Chess.Enums
 {
-	public class ChessGame
-	{
-		public void Run()
-		{
-
-		}
-	}
+	public enum ChessColor { WHITE, BLACK }
 }
